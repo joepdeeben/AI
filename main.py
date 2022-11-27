@@ -1,3 +1,5 @@
+import string
+
 import pandas as pd
 import requests
 import numpy as np
@@ -6,6 +8,9 @@ import scipy
 import tensorflow as tf
 import keras
 from requests.exceptions import ChunkedEncodingError
+import string
+
+alphabet = string.ascii_letters
 
 n = []
 
@@ -43,19 +48,25 @@ link = link.replace("TSLA", tick)
 
 tesla = []
 price = []
+def create_prices(link):
+    price = (datagetter(link))
+    price = price.values.tolist()
+    tesla.append(price)
+    print(tesla[0])
 
-price = (datagetter(link))
-price = price.values.tolist()
-tesla.append(price)
-print(tesla)
-tesla[0].pop(-1)
-print(tesla)
-print(len(tesla[0]))
+    pricelist = []
 
-looper = 1
+    for x in tesla[0]:
+            for y in x:
+                try:
+                    pricelist.append(float(y))
+                except:
+                    pass
 
-pricelist = tesla
-print(pricelist)
+    return pricelist
 
-pricelist = tf.keras.utils.normalize(pricelist, axis=1)
-print(pricelist)
+pricelist = create_prices(link)
+train = pricelist[50]
+test = pricelist[50:100]
+train = tf.keras.layers.Normalization(axis=None)
+print(train)
